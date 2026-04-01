@@ -1,3 +1,5 @@
+![Banner](banner.svg)
+
 # git-clean-branches
 
 > List and delete merged and stale git branches. Interactive TUI. Zero dependencies.
