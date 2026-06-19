@@ -1,109 +1,46 @@
-![Banner](banner.svg)
+<div align="center">
 
 # git-clean-branches
 
-> List and delete merged and stale git branches. Interactive TUI. Zero dependencies.
+**Interactive TUI to find and delete merged or stale git branches — no install needed**
+
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue?labelColor=0B0A09)](LICENSE)
+[![Zero Dependencies](https://img.shields.io/badge/dependencies-0-brightgreen?labelColor=0B0A09)](package.json)
+[![Node >=18](https://img.shields.io/badge/node-%3E%3D18-blue?labelColor=0B0A09)](package.json)
+
+</div>
 
 ## Install
 
 ```bash
-# Run without installing
-npx git-clean-branches
-
-# Install globally
-npm install -g git-clean-branches
+npx github:NickCirv/git-clean-branches
 ```
 
-## Quick Start
+## Usage
 
 ```bash
-# Interactive TUI — pick branches visually
+# Interactive TUI — navigate, select, delete
+npx github:NickCirv/git-clean-branches
+
+# Or install globally for the short alias
+npm install -g github:NickCirv/git-clean-branches
 gcb
-
-# List merged branches (non-interactive)
-gcb --merged
-
-# List branches with no commits in 30 days
-gcb --stale 30
-
-# Delete merged branches (with confirmation)
-gcb --merged --delete
-
-# Preview what would be deleted
-gcb --merged --delete --dry-run
 ```
-
-## TUI Demo
-
-```
-  git-clean-branches
-  Base: main  |  Current: feature/payment
-  ↑/↓ Navigate  ·  Space Select  ·  Enter Delete selected  ·  q Quit
-
-  Branch                              Last commit     Author              Status        Ahead/Behind
-  ────────────────────────────────────────────────────────────────────────────────────────────────
-  [ ] main                           (protected)
-  [ ] develop                        (protected)
-  [ ] feature/payment                (protected, current)
-
-  [ ] fix/login-bug                  3 days ago      Nick Ashkar         ✓ merged      +0 / -0
-  [ ] feature/old-api                45 days ago     Nick Ashkar         ✗ unmerged    +3 / -0
-> [✗] chore/temp-test                2 months ago    Nick Ashkar         ✓ merged      +0 / -0
-  [✗] hotfix/typo                    5 days ago      Nick Ashkar         ✓ merged      +0 / -0
-
-  2 branches selected for deletion  [Enter to delete]
-```
-
-Branch colors:
-- **Green** = merged into base branch (safe to delete)
-- **Yellow** = stale or unmerged (verify before deleting)
-- **Red** = selected for deletion
-- **Gray** = protected (cannot be selected)
-
-## Options
 
 | Flag | Description |
 |---|---|
-| `--merged` | Filter: only branches merged into current |
-| `--stale <days>` | Filter: no commits in last N days |
-| `--delete` | Delete matching branches (asks confirmation) |
+| `--merged` | Filter to branches already merged into base |
+| `--stale <days>` | Filter to branches with no commits in N days |
+| `--delete` | Delete matching branches (prompts for confirmation) |
 | `--remote` | Also delete remote tracking branches |
-| `--dry-run` | Preview what would be deleted, no actual deletion |
+| `--dry-run` | Preview what would be deleted — no actual deletion |
 | `--protect <list>` | Comma-separated protected branches (default: `main,master,develop`) |
 | `--format json` | Output JSON instead of table |
 | `-h, --help` | Show help |
 
-## Examples
+## What it does
 
-```bash
-# Delete all merged branches, skip confirmation prompt interactively
-gcb --merged --delete
-
-# Nuke stale remote branches older than 60 days (dry run first)
-gcb --stale 60 --delete --remote --dry-run
-gcb --stale 60 --delete --remote
-
-# Custom protection list
-gcb --merged --delete --protect "main,master,develop,release"
-
-# Machine-readable output for scripting
-gcb --merged --format json | jq '.[].name'
-```
-
-## Security
-
-- Uses `execFileSync` / `spawnSync` — no shell injection possible
-- No network requests — 100% local git commands
-- Never deletes the current branch or protected branches
-- Always asks for confirmation before any deletion
-- `--dry-run` flag to preview safely
-
-## Why?
-
-After months of development, repos accumulate dozens of stale branches. `git branch -d` is tedious one-by-one. This tool gives you a visual overview and lets you bulk-clean safely — merged branches only, with a confirmation step before anything is removed.
-
-No npm install needed. Zero external dependencies. Works anywhere Node 18+ is available.
+Launches a keyboard-driven TUI that lists all local branches with their merge status, last-commit age, author, and ahead/behind counts. Navigate with arrow keys, space to select, Enter to delete — protected branches and the current branch are never selectable. For scripting or CI, skip the TUI with `--merged` or `--stale <days>` and pipe `--format json` output to `jq`.
 
 ---
-
-Built with Node.js · Zero dependencies · MIT License
+<sub>Zero dependencies · Node >=18 · MIT · by <a href="https://github.com/NickCirv">NickCirv</a></sub>
